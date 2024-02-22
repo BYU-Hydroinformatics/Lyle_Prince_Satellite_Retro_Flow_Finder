@@ -1,10 +1,14 @@
+import ee
+
 import Satellite_Retro_Flow_Finder_v1
 import geoglows
 
 #inputs
-lat = 0
-lon = 0
+lat = 0.7680
+lon = -79.5532
 return_period = 10
+
+ee.Initialize(project="fier-tana")
 
 # get streamflows from GeoGLOWS
 q_geo = Satellite_Retro_Flow_Finder_v1.get_streamflow(lat, lon)
@@ -17,8 +21,9 @@ dates_imgs = Satellite_Retro_Flow_Finder_v1.get_image_dates(lat, lon)
 
 #match dates
 dates_flows_xr = Satellite_Retro_Flow_Finder_v1.match_dates(q_geo_xarray, dates_imgs)
-
+print(dates_flows_xr)
 #calculate return period
-return_period = geoglows.return_period(reach_id)
+flow_rp = Satellite_Retro_Flow_Finder_v1.filter_by_return_period(q_geo, dates_flows_xr, return_period)
+print(flow_rp)
 
 

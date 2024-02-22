@@ -1,6 +1,7 @@
 import xarray as xr
 from typing import Tuple
 from geoglows import streamflow
+from geoglows import analysis
 import ee
 import hydrafloods as hf
 import datetime
@@ -24,7 +25,7 @@ def get_streamflow(lat: float, lon: float) -> Tuple[xr.DataArray, int]:
     return q, reach['reach_id']
 
 def format_flow_dates(dates: pd.DataFrame) -> xr.DataArray:
-
+    dates.columns = ["discharge"]
     # rename index and drop the timezone value
     dates.index.name = "time"
     dates.index = dates.index.tz_localize(None)
@@ -33,15 +34,18 @@ def format_flow_dates(dates: pd.DataFrame) -> xr.DataArray:
     return dates.discharge.to_xarray()
 
 def get_image_dates(lat: float, lon: float):
-    region = ee.Geometry.BBox(lat+.001, lon+.001, lat-.001, lon-.001)
+    region = ee.Geometry.BBox(lon+.0001, lat+.0001, lon-.0001, lat-.0001)
     start = "2014-01-01"
     end = "2025-01-01"
-    s1 = hf.Sentinel1Asc(region, start, end)
+    s1 = hf.Sentinel1(region, start, end)
     dates = s1.dates
-    dates_df = pd.DataArray(dates)
-    dates_df = [datetime.datetime.utcfromtimestamp(i/1000).strftime('%Y-%m-%d') for i in dates_df]
-    dates_df.index.name = "time"
-    dates_array = dates_df.to_xarray()
+    dates_df = pd.DataFrame(dates, columns=["time"])
+    dates_df['time'] = dates_df['time'].str[:10]
+    dates_df['time'] = pd.to_datetime(dates_df['time'])
+    dates_array = xr.DataArray(
+        coords={'time': dates_df['time']},
+        dims=['time']
+    )
     return dates_array
 
 def match_dates(original: xr.DataArray, matching: xr.DataArray) -> xr.DataArray:
@@ -59,4 +63,18 @@ def match_dates(original: xr.DataArray, matching: xr.DataArray) -> xr.DataArray:
     # return the DataArray with only rows that match dates
     return original.where(original.time.isin(matching.time), drop=True)
 
-def calculate_statistics
+def filter_by_return_period(flow: xr.DataArray, flow_dates: xr.DataArray, return_period: int) -> xr.DataArray:
+    """Function to filter a DataArray by a return period value
+
+    args:
+        flow (xr.DataArray): DataArray with time dimension to filter
+        return_period (int): return period value to filter by
+
+    returns:
+        xr.DataArray: DataArray with values that have been temporally matched
+    """
+    return_periods = analysis.compute_return_periods(flow)
+    print(return_periods)
+    filter = return_periods['return_period_' + str(return_period)]
+    # return the DataArray with only rows that match dates
+    return flow_dates.where(flow_dates > filter, drop=True)
