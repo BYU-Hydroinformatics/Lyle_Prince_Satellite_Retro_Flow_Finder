@@ -1,0 +1,9 @@
+input_points_path: /Users/ldp/Downloads/test_points.csv
+v2_table_path: /Users/ldp/Downloads/v2_table.parquet
+reach_ID_path: /Users/ldp/Downloads/reach_ID.csv
+Geoglows_hist_path: /Users/ldp/Downloads/Geoglows_hist.nc
+SAR_dates_path: /Users/ldp/Downloads/SAR_dates.csv
+flow_occurance_path: /Users/ldp/Downloads/flow_occurance.csv
+master_dates_path: /Users/ldp/Downloads/master_dates.csv
+return_period: 10
+

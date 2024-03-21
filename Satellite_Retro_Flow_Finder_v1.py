@@ -63,7 +63,7 @@ def match_dates(original: xr.DataArray, matching: xr.DataArray) -> xr.DataArray:
     # return the DataArray with only rows that match dates
     return original.where(original.time.isin(matching.time), drop=True)
 
-def filter_by_return_period(flow: xr.DataArray, flow_dates: xr.DataArray, return_period: int) -> xr.DataArray:
+def filter_by_return_period(flow: xr.DataArray, flow_dates: xr.DataArray, return_period) -> xr.DataArray:
     """Function to filter a DataArray by a return period value
 
     args:
@@ -73,8 +73,27 @@ def filter_by_return_period(flow: xr.DataArray, flow_dates: xr.DataArray, return
     returns:
         xr.DataArray: DataArray with values that have been temporally matched
     """
+    num_imgs = [flow_dates.sizes['time']]
+    rp = [2, 5, 10, 25, 50, 100]
     return_periods = analysis.compute_return_periods(flow)
     print(return_periods)
-    filter = return_periods['return_period_' + str(return_period)]
+    dates = pd.DataFrame()
+    rp_out = return_period
+    for i in rp:
+        flow_drop = flow_dates.where(flow_dates <= return_periods['return_period_' + str(i)], drop=True)
+        flow_dates = flow_dates.where(flow_dates > return_periods['return_period_' + str(i)], drop=True)
+        num_imgs.append(flow_dates.sizes['time'])
+        if i > return_period:
+            flow_drop = flow_drop.to_dataframe()
+            if flow_drop.empty == False:
+                flow_drop.loc[:, 'return_period'] = rp_out
+                dates = dates.append(flow_drop)
+            if i == 100:
+                flow_drop = flow_dates.to_dataframe()
+                if flow_drop.empty == False:
+                    flow_drop.loc[:, 'return_period'] = rp_out
+                    dates = dates.append(flow_drop)
+            rp_out = i
+
     # return the DataArray with only rows that match dates
-    return flow_dates.where(flow_dates > filter, drop=True)
+    return num_imgs, dates
