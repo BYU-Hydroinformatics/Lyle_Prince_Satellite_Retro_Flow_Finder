@@ -8,9 +8,12 @@ import ee
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument( '--config', type=str, help='Configuration file')
+    parser.add_argument('--config', type=str, help='Configuration file', default='configs.yaml')
     args = parser.parse_args()
     config_file = args.config
+
+    if config_file is None:
+        raise ValueError("Please provide a configuration file")
 
     # read the yaml config file
     with open(config_file, 'r') as f:
@@ -23,14 +26,10 @@ if __name__ == "__main__":
     ee.Initialize(project="fier-tana")
 
     #open the historical simulation data
-    geohistdf = pd.read_csv(Geoglows_Hist_Path)
-    latlons = pd.read_csv(reach_ids_path, header=None)
+    latlons = pd.read_csv(reach_ids_path)
 
-    dims = "time, v2number"
-    date_img_xr_combined = xr.DataArray(
-        dims=dims,
-        coords={"time": geohistdf.index, "v2number": geohistdf.columns},
-    )
+    comb_dates = pd.DataFrame()
+
     # inputs
     for row in latlons.itertuples():
         lat = row[1]
@@ -38,10 +37,11 @@ if __name__ == "__main__":
         v2number = row[3]
 
         # get image dates
-        dates_imgs = Satellite_Retro_Flow_Finder_v1.get_image_dates(lat, lon)
+        dates_imgs = Satellite_Retro_Flow_Finder_v1.get_image_dates_df(lat, lon)
+        dates_imgs.rename(columns={"time":v2number}, inplace=True)
 
         # add dates to the xarray
-        date_img_xr_combined.loc[{"v2number": v2number}] = dates_imgs
-
+        comb_dates= pd.concat([comb_dates, dates_imgs], axis=1)
     # save the xarray
-    date_img_xr_combined.to_netcdf(SAR_dates_path)
+    comb_dates.to_csv(SAR_dates_path, index=False)
+    print("SAR dates saved to ", SAR_dates_path)

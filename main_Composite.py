@@ -33,7 +33,7 @@ geohistzarr = xr.open_zarr(s3store)
 geohistdf = geohistzarr['Qout'].sel(rivid=v2numbers).to_dataframe()
 geohistdf = geohistdf.reset_index().set_index('time').pivot(columns='rivid', values='Qout')
 geohistxr = geohistdf.to_xarray()
-#print(geohistxr)
+print(geohistxr)
 # cache the historical simulation data
 # gdf = gpd.read_file('/Users/ldp/Downloads/global_streams_simplified.gpkg')
 # gdf[['lat', 'lon']] = gdf['geometry'].apply(lambda x: x.representative_point().coords[:][0])
@@ -56,6 +56,8 @@ for row in latlons.itertuples():
 
     #get image dates
     dates_imgs = Satellite_Retro_Flow_Finder_v1.get_image_dates(lat, lon)
+
+    print(dates_imgs)
 
     #match dates
     dates_flows_xr = Satellite_Retro_Flow_Finder_v1.match_dates(q_geo_xarray, dates_imgs)

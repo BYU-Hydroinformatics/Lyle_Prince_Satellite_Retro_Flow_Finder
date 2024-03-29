@@ -2,13 +2,18 @@ import argparse
 import Satellite_Retro_Flow_Finder_v1
 import pandas as pd
 import yaml
+import s3fs
+import xarray as xr
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument( '--config', type=str, help='Configuration file')
+    parser.add_argument('--config', type=str, help='Configuration file', default='configs.yaml')
     args = parser.parse_args()
     config_file = args.config
+
+    if config_file is None:
+        raise ValueError("Please provide a configuration file")
 
     # read the yaml config file
     with open(config_file, 'r') as f:
@@ -17,7 +22,8 @@ if __name__ == "__main__":
         Geoglows_Hist_Path = config['Geoglows_Hist_Path']
 
     # read the inputs
-    latlons = pd.read_csv(reach_ids_path, header=None)
+    latlons = pd.read_csv(reach_ids_path)
+    v2numbers = latlons['v2number']
 
     #set up AWS
     bucket_uri = 's3://geoglows-v2-retrospective/retrospective.zarr'
@@ -27,7 +33,9 @@ if __name__ == "__main__":
 
     # get historical simulation data
     geohistzarr = xr.open_zarr(s3store)
-    geohistdf = geohistzarr['Qout'].sel(rivid=v2numbers).to_dataframe()
+    geohistdf = geohistzarr['Qout'].sel(rivid=v2numbers.values).to_dataframe()
+    print(geohistdf)
     geohistdf = geohistdf.reset_index().set_index('time').pivot(columns='rivid', values='Qout')
+    print(geohistdf)
     geohistdf.to_csv(Geoglows_Hist_Path)
     print("Historical simulation data saved to ", Geoglows_Hist_Path)

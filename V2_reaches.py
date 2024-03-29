@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     # read the inputs
     v2table = pd.read_parquet(v2_table_path)
-    latlons = pd.read_csv(input_points_path, header=None)
+    latlons = pd.read_csv(input_points_path, names=['lat', 'lon'])
 
     def latlon_to_v2number(row):
         lat = row[0]
@@ -29,6 +29,7 @@ if __name__ == "__main__":
         return v2['LINKNO'].values[0]
 
     # apply the function to the latlons dataframe and save to list
-    latlons['v2number'] = latlons.apply(latlon_to_v2number, axis=1)
-    latlons.to_csv(reach_ids_path, index=False)
+    latlons["v2number"] = latlons.apply(latlon_to_v2number, axis=1)
+    # drop column names
+    latlons.to_csv(reach_ids_path, header=False, index=False)
     print("Reach IDs saved to ", reach_ids_path)

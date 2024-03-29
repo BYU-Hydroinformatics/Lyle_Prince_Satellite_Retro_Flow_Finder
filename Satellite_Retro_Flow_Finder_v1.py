@@ -48,6 +48,17 @@ def get_image_dates(lat: float, lon: float):
     )
     return dates_array
 
+def get_image_dates_df(lat: float, lon: float):
+    region = ee.Geometry.BBox(lon+.0001, lat+.0001, lon-.0001, lat-.0001)
+    start = "2014-01-01"
+    end = "2025-01-01"
+    s1 = hf.Sentinel1(region, start, end)
+    dates = s1.dates
+    dates_df = pd.DataFrame(dates, columns=["time"])
+    dates_df['time'] = dates_df['time'].str[:10]
+    dates_df['time'] = pd.to_datetime(dates_df['time'])
+    return dates_df
+
 def match_dates(original: xr.DataArray, matching: xr.DataArray) -> xr.DataArray:
     """Helper function to filter a DataArray from that match the data values of another.
     Expects that each xarray object has a dimesion named 'time'
