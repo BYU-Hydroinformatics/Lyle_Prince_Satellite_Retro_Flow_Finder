@@ -6,9 +6,12 @@ import yaml
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument( '--config', type=str, help='Configuration file')
+    parser.add_argument('--config', type=str, help='Configuration file', default='configs.yaml')
     args = parser.parse_args()
     config_file = args.config
+
+    if config_file is None:
+        raise ValueError("Please provide a configuration file")
 
     # read the yaml config file
     with open(config_file, 'r') as f:
@@ -30,6 +33,9 @@ if __name__ == "__main__":
 
     # apply the function to the latlons dataframe and save to list
     latlons["v2number"] = latlons.apply(latlon_to_v2number, axis=1)
+    # filter to unique values
+    latlons = latlons.drop_duplicates(subset=['v2number'])
+
     # drop column names
-    latlons.to_csv(reach_ids_path, header=False, index=False)
+    latlons.to_csv(reach_ids_path, index=False)
     print("Reach IDs saved to ", reach_ids_path)

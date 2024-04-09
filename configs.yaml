@@ -1,9 +1,9 @@
-input_points_path: /Users/ldp/Downloads/test_points.csv
+input_points_path: /Users/ldp/Downloads/test_points_3.csv
 v2_table_path: /Users/ldp/Downloads/gv2Centroids.parquet
-reach_ids_path: /Users/ldp/Downloads/reach_ID.csv
-Geoglows_Hist_Path: /Users/ldp/Downloads/Geoglows_hist.csv
-SAR_dates_path: /Users/ldp/Downloads/SAR_dates.csv
-flow_occurance_path: /Users/ldp/Downloads/flow_occurance_new.csv
-master_dates_path: /Users/ldp/Downloads/master_dates_new.csv
+reach_ids_path: /Users/ldp/Downloads/reach_ID_3.csv
+Geoglows_Hist_Path: /Users/ldp/Downloads/Geoglows_hist_3.csv
+SAR_dates_path: /Users/ldp/Downloads/SAR_dates_3.csv
+flow_occurance_path: /Users/ldp/Downloads/flow_occurance_new_3.csv
+master_dates_path: /Users/ldp/Downloads/master_dates_new_3.csv
 return_period: 10
 

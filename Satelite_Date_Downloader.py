@@ -41,7 +41,8 @@ if __name__ == "__main__":
         dates_imgs.rename(columns={"time":v2number}, inplace=True)
 
         # add dates to the xarray
-        comb_dates= pd.concat([comb_dates, dates_imgs], axis=1)
+        comb_dates = pd.concat([comb_dates, dates_imgs], axis=1)
     # save the xarray
     comb_dates.to_csv(SAR_dates_path, index=False)
     print("SAR dates saved to ", SAR_dates_path)
+

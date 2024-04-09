@@ -34,8 +34,8 @@ if __name__ == "__main__":
     # get historical simulation data
     geohistzarr = xr.open_zarr(s3store)
     geohistdf = geohistzarr['Qout'].sel(rivid=v2numbers.values).to_dataframe()
-    print(geohistdf)
-    geohistdf = geohistdf.reset_index().set_index('time').pivot(columns='rivid', values='Qout')
+
+    geohistdf = geohistdf.reset_index().pivot(columns='rivid', values='Qout', index='time')
     print(geohistdf)
     geohistdf.to_csv(Geoglows_Hist_Path)
     print("Historical simulation data saved to ", Geoglows_Hist_Path)
