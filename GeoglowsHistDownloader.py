@@ -4,6 +4,7 @@ import pandas as pd
 import yaml
 import s3fs
 import xarray as xr
+import geoglows
 
 
 if __name__ == "__main__":
@@ -20,6 +21,7 @@ if __name__ == "__main__":
         config = yaml.safe_load(f)
         reach_ids_path = config['reach_ids_path']
         Geoglows_Hist_Path = config['Geoglows_Hist_Path']
+        return_period_path = config['return_period_path']
 
     # read the inputs
     latlons = pd.read_csv(reach_ids_path)
@@ -34,8 +36,14 @@ if __name__ == "__main__":
     # get historical simulation data
     geohistzarr = xr.open_zarr(s3store)
     geohistdf = geohistzarr['Qout'].sel(rivid=v2numbers.values).to_dataframe()
-
     geohistdf = geohistdf.reset_index().pivot(columns='rivid', values='Qout', index='time')
-    print(geohistdf)
-    geohistdf.to_csv(Geoglows_Hist_Path)
+    return_periods = pd.concat([pd.DataFrame(geoglows.analysis.return_periods(geohistdf[col])) for col in geohistdf.columns])
+    print(return_periods.columns)
+    print(return_periods.head())
+    geohistdf.columns = geohistdf.columns.astype(str)
+    # print(geohistdf)
+    geohistdf.to_parquet(Geoglows_Hist_Path)
     print("Historical simulation data saved to ", Geoglows_Hist_Path)
+    return_periods.to_parquet(return_period_path)
+    print("Return periods saved to ", return_period_path)
+

@@ -1,10 +1,12 @@
-input_points_path: /Users/ldp/Downloads/TestPoint3.csv
+input_points_path: /Users/ldp/Downloads/TestPoint5.csv
 v2_table_path: /Users/ldp/Downloads/gv2Centroids.parquet
-reach_ids_path: /Users/ldp/Downloads/Reach_ID_3.csv
-Geoglows_Hist_Path: /Users/ldp/Downloads/Geoglows_hist_3.csv
+reach_ids_path: /Users/ldp/Downloads/Reach_ID_5.csv
+Geoglows_Hist_Path: /Users/ldp/Downloads/Geoglows_hist_5.parquet
 Master_SAR_dates_path: /Users/ldp/Documents/FIER/ImgDates/Sentinel1_Bounds_
-SAR_dates_path: /Users/ldp/Downloads/SAR_dates_3b.parquet
-flow_occurance_path: /Users/ldp/Downloads/flow_occurance_new_3.csv
-master_dates_path: /Users/ldp/Downloads/master_dates_new_3.csv
+SAR_dates_path: /Users/ldp/Downloads/SAR_dates_5.parquet
+flow_occurance_path: /Users/ldp/Downloads/flow_occurance_new_5.csv
+master_dates_path: /Users/ldp/Downloads/master_dates_new_5.csv
+v2_river_table_path: /Users/ldp/Downloads/v2-model-table.parquet
+return_period_path: /Users/ldp/Downloads/return_period_5.parquet
 return_period: 10
 
