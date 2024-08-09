@@ -22,7 +22,7 @@ if __name__ == "__main__":
         SAR_dates_path = config['SAR_dates_path']
         Master_SAR_dates_path = config['Master_SAR_dates_path']
 
-    latlons_df = pd.read_csv(reach_ids_path)
+    latlons_df = pd.read_parquet(reach_ids_path)
     points_gdf = gpd.GeoDataFrame(latlons_df, geometry=gpd.points_from_xy(latlons_df.lon, latlons_df.lat))
     export_gdf = gpd.GeoDataFrame()
     orbits = ['ASC', 'DES']
@@ -32,8 +32,6 @@ if __name__ == "__main__":
     for i in years:
         for j in months:
             imgs_dates = gpd.read_parquet(Master_SAR_dates_path + str(i) + '_' + str(j) + '.parquet')
-            print(imgs_dates.head())
-            print(points_gdf.columns)
             points_dates_gdf = gpd.sjoin(points_gdf, imgs_dates, how='inner', predicate='covered_by')
             points_dates_gdf = points_dates_gdf.rename(columns={'index_right': 'date'})
             export_gdf = pd.concat([export_gdf, points_dates_gdf])

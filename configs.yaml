@@ -1,12 +1,18 @@
 input_points_path: /Users/ldp/Downloads/TestPoint5.csv
 v2_table_path: /Users/ldp/Downloads/gv2Centroids.parquet
-reach_ids_path: /Users/ldp/Downloads/Reach_ID_5.csv
+reach_ids_path: /Users/ldp/Downloads/Reach_ID_5.parquet
 Geoglows_Hist_Path: /Users/ldp/Downloads/Geoglows_hist_5.parquet
+USGS_Hist_Root_Path: /Users/ldp/Documents/USA/
+USGS_Hist_Path: /Users/ldp/Downloads/USGSPeakDataComplete.csv
+USGS_Sites_Detailed_Path: /Users/ldp/Downloads/USGSPeakDetailedSites.csv
+USGS_Sample_Sites_Path: /Users/ldp/Downloads/USGSPeakSampleSites.parquet
 Master_SAR_dates_path: /Users/ldp/Documents/FIER/ImgDates/Sentinel1_Bounds_
 SAR_dates_path: /Users/ldp/Downloads/SAR_dates_5.parquet
-flow_occurance_path: /Users/ldp/Downloads/flow_occurance_new_5.csv
-master_dates_path: /Users/ldp/Downloads/master_dates_new_5.csv
+flow_occurance_path: /Users/ldp/Downloads/flow_occurance_new_5.parquet
+master_dates_path: /Users/ldp/Downloads/master_dates_new_5.parquet
 v2_river_table_path: /Users/ldp/Downloads/v2-model-table.parquet
 return_period_path: /Users/ldp/Downloads/return_period_5.parquet
-return_period: 10
-
+Master_Table_Path: /Users/ldp/Downloads/Master_table_5.parquet
+return_period: 100
+lower_rp: '50'
+upper_rp: '100'

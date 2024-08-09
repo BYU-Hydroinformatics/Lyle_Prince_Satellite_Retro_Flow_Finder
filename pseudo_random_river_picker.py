@@ -39,4 +39,4 @@ if __name__ == "__main__":
     pseudo_random_rivers_by_vpu_df = pd.DataFrame(pseudo_random_rivers_by_vpu, columns=['v2number'])
     reach_id_df = pseudo_random_rivers_by_vpu_df.join(v2_table_df.set_index('LINKNO'), on='v2number').drop(columns=['geometry'])
     reach_id_df = reach_id_df[['lat', 'lon', 'v2number']]
-    reach_id_df.to_csv(reach_ids_path, index=False)
+    reach_id_df.to_parquet(reach_ids_path, index=False)
