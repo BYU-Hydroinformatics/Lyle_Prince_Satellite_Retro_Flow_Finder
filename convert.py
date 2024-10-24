@@ -59,7 +59,49 @@ import pandas as pd
 
 
 # read netcdf files and print the first 5 row
-import xarray as xr
-ds = xr.open_dataset('/Users/ldp/Downloads/nwm_2018_2023_7469392_14073444.nc')
-ds_bc = xr.open_dataset('/Users/ldp/Downloads/nwm_2018_2023_7469392_14073444_bias_corrected.nc')
-print(ds)
+# import xarray as xr
+# ds = xr.open_dataset('/Users/ldp/Downloads/nwm_2018_2023_7469392_14073444.nc')
+# ds_bc = xr.open_dataset('/Users/ldp/Downloads/nwm_2018_2023_7469392_14073444_bias_corrected.nc')
+# print(ds)
+
+import geopandas as gpd
+# gdf = gpd.read_file('/Users/ldp/Downloads/nwm_flows4326.gpkg')
+# gdf.to_parquet('/Users/ldp/Downloads/nwm_flows4326.parquet')
+# gdf = gpd.read_parquet('/Users/ldp/Downloads/nwm_flows4326.parquet')
+# print(gdf.head())
+
+# df = pd.read_parquet('/Users/ldp/Downloads/nwm_bq_streams.parquet')
+# df['geometry'] = gpd.GeoSeries.from_wkt(df['geometry'])
+# gdf = gpd.GeoDataFrame(df, geometry='geometry', crs='EPSG:4326')
+# gdf.to_parquet('/Users/ldp/Downloads/nwm_bq_streams_geo.parquet')
+
+# gdf = gpd.read_parquet('/Users/ldp/Downloads/nwm_bq_streams_geo.parquet')
+# # read txt file into list
+# with open('/Users/ldp/Documents/null_rids.txt') as f:
+#      null_rids = f.readlines()
+#
+# null_rids = [int(x.strip()) for x in null_rids]
+#
+# # filter gdf to only include rows with station_id in null_rids
+# gdf = gdf.loc[gdf['station_id'].isin(null_rids)]
+# # save the filtered gdf to gpkg
+# gdf.to_file('/Users/ldp/Downloads/nwm_bq_streams_geo_null_rids.gpkg', driver='GPKG')
+
+# gdf = gpd.read_file('/Users/ldp/Downloads/global_streams_simplified.gpkg')
+# gdf = gdf.to_crs('EPSG:4326')
+# gdf.to_parquet('/Users/ldp/Downloads/global_streams_simplified_4326.parquet')
+
+# master_dates_path = '/Users/ldp/Downloads/master_dates_new_5.parquet'
+# master_dates = pd.read_parquet(master_dates_path)
+#
+# # convert master_dates to geodataframe where lat and lon are the geometry and save as geopackage
+# master_dates = gpd.GeoDataFrame(master_dates, geometry=gpd.points_from_xy(master_dates.lon, master_dates.lat), crs='EPSG:4326')
+# master_dates.to_file('/Users/ldp/Downloads/master_dates_new_5.gpkg', driver='GPKG')
+
+gdf = gpd.read_file('/Users/ldp/Downloads/Tetons_Lakes.gpkg')
+gdf = gdf.to_crs('EPSG:4326')
+# create lat lon, and elevation columns
+gdf['lat'] = gdf.geometry.y
+gdf['lon'] = gdf.geometry.x
+gdf['elevation'] = gdf.geometry.z
+gdf.to_csv('/Users/ldp/Downloads/Tetons_Lakes.csv', index=False)
