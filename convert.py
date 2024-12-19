@@ -98,10 +98,10 @@ import geopandas as gpd
 # master_dates = gpd.GeoDataFrame(master_dates, geometry=gpd.points_from_xy(master_dates.lon, master_dates.lat), crs='EPSG:4326')
 # master_dates.to_file('/Users/ldp/Downloads/master_dates_new_5.gpkg', driver='GPKG')
 
-gdf = gpd.read_file('/Users/ldp/Downloads/Tetons_Lakes.gpkg')
+gdf = gpd.read_file('/Users/ldp/Downloads/Tetons_Lakes_all_Z.gpkg')
 gdf = gdf.to_crs('EPSG:4326')
 # create lat lon, and elevation columns
 gdf['lat'] = gdf.geometry.y
 gdf['lon'] = gdf.geometry.x
 gdf['elevation'] = gdf.geometry.z
-gdf.to_csv('/Users/ldp/Downloads/Tetons_Lakes.csv', index=False)
+gdf.to_csv('/Users/ldp/Downloads/Tetons_Lakes_all.csv', index=False)

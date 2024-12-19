@@ -27,6 +27,13 @@ if __name__ == "__main__":
         v2 = v2table[distance == distance.min()]
         return v2['LINKNO'].values[0]
 
+    def latlon_to_v2number_new(row):
+        lat = row['lat']
+        lon = row['lon']
+        distance = (v2table['lat'] - lat) ** 2 + (v2table['lon'] - lon) ** 2
+        v2 = v2table[distance == distance.min()]
+        return v2['LINKNO'].values[0]
+
     # read the inputs
     v2table = pd.read_parquet(v2_table_path)
     latlons = pd.read_csv(input_points_path, names=['lat', 'lon'])

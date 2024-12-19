@@ -2,6 +2,8 @@ import yaml
 import pandas as pd
 import argparse
 
+from pandas import IndexSlice
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, help='Configuration file', default='configs.yaml')
@@ -44,5 +46,14 @@ if __name__ == "__main__":
 
     flow_occurance_df.to_parquet('/Users/ldp/Documents/max_rp.parquet')
     print("Suitability saved to max_rp.parquet")
+    #filter to Indexes with ASC and group by suitability and count
+    print(flow_occurance_df.loc[pd.IndexSlice[:,'ASC']].groupby('suitability').count())
+    print(flow_occurance_df.loc[pd.IndexSlice[:, 'DES']].groupby('suitability').count())
+    #simplify to a single index by keeping the row with the highest suitability
+    flow_occurance_max_df = flow_occurance_df.loc[flow_occurance_df.groupby('v2number')['suitability'].idxmax()]
+    print(flow_occurance_max_df.groupby('suitability').count())
+
+    print(flow_occurance_df['suitability'].value_counts())
+
     print(flow_occurance_df.head(10))
 
